@@ -74,5 +74,5 @@ Authors
 License
 -------
 
-TO_BE_DEFINED
+  GPL 3.0 (see LICENSE.txt)
 
