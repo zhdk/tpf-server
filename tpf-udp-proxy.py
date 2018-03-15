@@ -27,12 +27,15 @@ import socket, sys
 UDP_IP = "0.0.0.0"
 linklookup = dict()
 tokenlookup = dict()
+DEFAULT_UDP_PORT = 4460
 
 try:
     UDP_PORT = int(sys.argv[1])
 except ValueError:
     print 'Specified port is not a number'
     sys.exit(1)
+except IndexError:
+    UDP_PORT = DEFAULT_UDP_PORT
 
 # haben wir einen gueltigen Port
 if not isinstance( UDP_PORT, int ) or not  1024 <= UDP_PORT <= 65535:
