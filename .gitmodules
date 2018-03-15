@@ -1,0 +1,3 @@
+[submodule "netpd-server"]
+	path = netpd-server
+	url = https://github.com/reduzent/netpd-server.git
