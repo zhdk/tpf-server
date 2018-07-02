@@ -9,7 +9,7 @@ About
 -----
 
 tpf-server is used to connect instances of tpf-clients. It is
-supposed to run on public server with a public IP address.
+supposed to run on server with a public IP address.
 
 tpf-client is a low-latency audio transmission software based
 on the jacktrip protocol and built in Pure Data.
