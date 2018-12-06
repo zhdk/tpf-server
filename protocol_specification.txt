@@ -4,8 +4,7 @@ Abstract
 Protocol Version: 1.0
 
 This document describes the protocol used by the TPF (telematic performances format [1]) tool
-set which consists of a client part and a server part. An implementation of the server
-is always running on telematic.zhdk.ch on TCP port 3025. This document describes how
+set which consists of a client part and a server part. This document describes how
 the client interacts with the server. It serves as a reference to allow for a client
 implementation in any programming language that supports OSC (Open Sound Control [2]). Along
 with that document comes a client implementation done in Pure Data [3]: tpf-client.pd
