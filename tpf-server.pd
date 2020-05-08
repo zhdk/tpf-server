@@ -1,6 +1,6 @@
-#N canvas 719 132 350 402 10;
-#X declare -stdpath osc;
+#N canvas 719 165 350 402 10;
 #X declare -path netpd-server/includes;
+#X declare -path osc;
 #N canvas 719 374 558 410 tpf.communication 0;
 #X obj 7 8 r SERVER;
 #X obj 7 74 s \$0.from;
@@ -589,6 +589,6 @@ by IP and port.;
 #X connect 7 0 8 0;
 #X connect 9 0 4 0;
 #X restore 13 285 pd reset/all;
-#X obj 12 13 declare -stdpath osc;
 #X obj 13 341 netpd-server/netpd-server;
 #X obj 13 363 declare -path netpd-server/includes;
+#X obj 12 13 declare -path osc;
