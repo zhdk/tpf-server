@@ -64,7 +64,8 @@ def addlink():
         linklookup[(ip1, port1)] = (ip2, port2)
         linklookup[(ip2, port2)] = (ip1, port1)
     except:
-        sock.sendto("Error while executing: " + " ".join(command) + '\n', srcaddr)
+        payload = "Error while executing: " + " ".join(command) + '\n'
+        sock.sendto(payload.encode('utf-8'), srcaddr)
 
 def addtoken(token, addr):
     if token in tokenlookup:
@@ -81,7 +82,8 @@ def clear():
         linklookup.clear()
         tokenlookup.clear()
     except:
-        sock.sendto("Clearing linklookup table failed\n", srcaddr)
+        payload = "Clearing linklookup table failed\n"
+        sock.sendto(payload.encode('utf-8'), srcaddr)
 
 def dellink():
     try:
@@ -89,13 +91,15 @@ def dellink():
         del linklookup[(ip1, int(port1))]
         del linklookup[(ip2, int(port2))]
     except:
-        sock.sendto("Error while executing: " + " ".join(command) + '\n', srcaddr)
+        payload = "Error while executing: " + " ".join(command) + '\n'
+        sock.sendto(payload.encode('utf-8'), srcaddr)
 
 def printlinks():
-    sock.sendto('LINK LOOKUP TABLE\n', srcaddr)
-    for lookup_key, lookup_value in linklookup.iteritems():
-        sock.sendto(lookup_key[0] + ':' + str(lookup_key[1]) + ' => ', srcaddr)
-        sock.sendto(lookup_value[0] + ':' + str(lookup_value[1]) + '\n', srcaddr)
+    sock.sendto('LINK LOOKUP TABLE\n'.encode('utf-8'), srcaddr)
+    for lookup_key, lookup_value in linklookup.items():
+        payload = lookup_key[0] + ':' + str(lookup_key[1]) + ' => ' + \
+                  lookup_value[0] + ':' + str(lookup_value[1]) + '\n'
+        sock.sendto(payload.encode('utf-8'), srcaddr)
 
 # map command to method calls
 methods = {
@@ -108,17 +112,16 @@ methods = {
 # our main loop
 while True:
     data, srcaddr = sock.recvfrom(65507)
+    data = data.decode('utf-8')
 
     # manipulate table if packet is from localhost
     if srcaddr[0] == '127.0.0.1':
         command = data.split()
         try:
             methods[command[0]]()
-        except:
-            try:
-                sock.sendto(command[0] + ': method not implemented\n', srcaddr)
-            except:
-                pass
+        except KeyError:
+            payload = command[0] + ': method not implemented\n'
+            sock.sendto(payload.encode('utf-8'), srcaddr)
 
     # check token
     elif data[0:7] == '_TOKEN ':
@@ -132,7 +135,7 @@ while True:
     else:
         try:
             destaddr = linklookup[srcaddr]
-            sock.sendto(data, destaddr)
+            sock.sendto(data.encode('utf-8'), destaddr)
         except:
             pass
 
