@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # udp_dyn_proxy manages an internal lookup table to relay incoming
 # udp datagrams to a certain destination
