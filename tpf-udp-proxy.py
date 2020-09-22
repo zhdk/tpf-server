@@ -112,11 +112,14 @@ methods = {
 # our main loop
 while True:
     data, srcaddr = sock.recvfrom(65507)
-    data = data.decode('utf-8')
+    try:
+        data_serialized = data.decode('utf-8')
+    except UnicodeDecodeError:
+        data_serialized = ''
 
     # manipulate table if packet is from localhost
     if srcaddr[0] == '127.0.0.1':
-        command = data.split()
+        command = data_serialized.split()
         try:
             methods[command[0]]()
         except KeyError:
@@ -124,8 +127,8 @@ while True:
             sock.sendto(payload.encode('utf-8'), srcaddr)
 
     # check token
-    elif data[0:7] == '_TOKEN ':
-        token = data.split()
+    elif data_serialized[0:7] == '_TOKEN ':
+        token = data_serialized.split()
         try:
             addtoken(token[1], srcaddr)
         except:
@@ -135,7 +138,7 @@ while True:
     else:
         try:
             destaddr = linklookup[srcaddr]
-            sock.sendto(data.encode('utf-8'), destaddr)
+            sock.sendto(data, destaddr)
         except:
             pass
 
