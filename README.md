@@ -1,7 +1,7 @@
 ## tpf-server
 
-NOTE: tpf-server is still in development and might break
-      backwards compatibility.
+NOTE: tpf-server is still in an experimental state and does not guarantuee
+      backwards compatibility yet.
 
 
 ### About
