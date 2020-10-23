@@ -1,12 +1,10 @@
-tpf-server
-----------
+## tpf-server
 
 NOTE: tpf-server is still in development and might break
       backwards compatibility.
 
 
-About
------
+### About
 
 tpf-server is used to connect instances of tpf-clients. It is
 supposed to run on server with a public IP address.
@@ -21,8 +19,7 @@ For more information visit:
   https://gitlab.zhdk.ch/TPF/tpf-client
 
 
-Installation
-------------
+### Installation
 
 Install Pure Data with your package manager or get binaries
 from:
@@ -30,6 +27,7 @@ from:
   https://puredata.info/downloads/
 
 You need the following externals to run tpf-client
+
   * iemnet
   * osc
   * slip
@@ -40,17 +38,19 @@ You can install externals through the Pd menu:
 tpf-server uses netpd-server as a git submodule, thus make
 sure to clone the repository like this:
 
-  git clone --recursive https://gitlab.zhdk.ch/TPF/tpf-server
+```
+git clone --recursive https://gitlab.zhdk.ch/TPF/tpf-server
+```
 
-
-Run tpf-server
---------------
+### Run tpf-server
 
 For the server to be reachable by the clients, it should run on
 a machine with a public IP address. On a head-less machine, you
 probably want to run it in nogui mode:
 
-  pd -nogui -open tpf-server/tpf-server.pd
+```
+pd -nogui -open tpf-server/tpf-server.pd
+```
 
 The server opens a listening socket on TCP-port 3025. So make
 sure that this port is open in your firewall configuration.
@@ -58,21 +58,21 @@ The TCP-Port 3025 is only used for client communication and not for
 audio transmission. The audio transmission is using UDP-Port 4460
 and requires a separate Python script to be running:
 
-  ./tpf-udp-proxy.py
+```
+./tpf-udp-proxy.py
+```
 
 This waits for incoming client connections and relays UDP packets
 between clients.
 
 
 
-Authors
--------
+### Authors
 
   * Roman Haefeli <roman.haefeli@zhdk.ch>
   * Johannes Schütt <johannes.schuett@zhdk.ch>
 
-License
--------
+### License
 
   GPL 3.0 (see LICENSE.txt)
 
