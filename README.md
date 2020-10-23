@@ -65,7 +65,9 @@ and requires a separate Python script to be running:
 This waits for incoming client connections and relays UDP packets
 between clients.
 
+### Issues
 
+For any bug, issue or suggestion, please open an issue [here](https://github.com/reduzent/tpf-server/issues).
 
 ### Authors
 
