@@ -21,13 +21,15 @@
 #   printlinks
 #
 
-import socket, sys
+import socket
+import sys
 
 # init values
 UDP_IP = '0.0.0.0'
 linklookup = dict()
 tokenlookup = dict()
 DEFAULT_UDP_PORT = 4460
+srcaddr = None
 
 try:
     UDP_PORT = int(sys.argv[1])
@@ -65,7 +67,7 @@ def addlink():
         linklookup[(ip2, port2)] = (ip1, port1)
     except:
         payload = "Error while executing: " + " ".join(command) + '\n'
-        sock.sendto(payload.encode('utf-8'), srcaddr)
+        sock.sendto(payload.encode(), srcaddr)
 
 def addtoken(token, addr):
     if token in tokenlookup:
@@ -83,7 +85,7 @@ def clear():
         tokenlookup.clear()
     except:
         payload = "Clearing linklookup table failed\n"
-        sock.sendto(payload.encode('utf-8'), srcaddr)
+        sock.sendto(payload.encode(), srcaddr)
 
 def dellink():
     try:
@@ -92,14 +94,14 @@ def dellink():
         del linklookup[(ip2, int(port2))]
     except:
         payload = "Error while executing: " + " ".join(command) + '\n'
-        sock.sendto(payload.encode('utf-8'), srcaddr)
+        sock.sendto(payload.encode(), srcaddr)
 
 def printlinks():
-    sock.sendto('LINK LOOKUP TABLE\n'.encode('utf-8'), srcaddr)
+    sock.sendto('LINK LOOKUP TABLE\n'.encode(), srcaddr)
     for lookup_key, lookup_value in linklookup.items():
         payload = lookup_key[0] + ':' + str(lookup_key[1]) + ' => ' + \
                   lookup_value[0] + ':' + str(lookup_value[1]) + '\n'
-        sock.sendto(payload.encode('utf-8'), srcaddr)
+        sock.sendto(payload.encode(), srcaddr)
 
 # map command to method calls
 methods = {
@@ -110,35 +112,43 @@ methods = {
     }
 
 # our main loop
-while True:
-    data, srcaddr = sock.recvfrom(65507)
+def main():
+    global srcaddr
     try:
-        data_serialized = data.decode('utf-8')
-    except UnicodeDecodeError:
-        data_serialized = ''
+        while True:
+            data, srcaddr = sock.recvfrom(65507)
+            try:
+                data_serialized = data.decode()
+            except UnicodeDecodeError:
+                data_serialized = ''
 
-    # manipulate table if packet is from localhost
-    if srcaddr[0] == '127.0.0.1':
-        command = data_serialized.split()
-        try:
-            methods[command[0]]()
-        except KeyError:
-            payload = command[0] + ': method not implemented\n'
-            sock.sendto(payload.encode('utf-8'), srcaddr)
+            # manipulate table if packet is from localhost
+            if srcaddr[0] == '127.0.0.1':
+                command = data_serialized.split()
+                try:
+                    methods[command[0]]()
+                except KeyError:
+                    payload = command[0] + ': method not implemented\n'
+                    sock.sendto(payload.encode(), srcaddr)
 
-    # check token
-    elif data_serialized[0:7] == '_TOKEN ':
-        token = data_serialized.split()
-        try:
-            addtoken(token[1], srcaddr)
-        except:
-            pass
+            # check token
+            elif data_serialized[0:7] == '_TOKEN ':
+                token = data_serialized.split()
+                try:
+                    addtoken(token[1], srcaddr)
+                except:
+                    pass
 
-    # forward data according to lookup table
-    else:
-        try:
-            destaddr = linklookup[srcaddr]
-            sock.sendto(data, destaddr)
-        except:
-            pass
+            # forward data according to lookup table
+            else:
+                try:
+                    destaddr = linklookup[srcaddr]
+                    sock.sendto(data, destaddr)
+                except:
+                    pass
+    except KeyboardInterrupt:
+        sys.exit(0)
+
+if __name__ == '__main__':
+    main()
 
