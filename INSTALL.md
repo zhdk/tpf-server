@@ -167,11 +167,12 @@ proxying jacktrip packets.
 
 When both services are running, your **tpf-server** is ready.
 
-### Firewall
+Firewall
+========
 
 Make sure that your firewall allows incoming traffic on the following ports:
 
   * 3025/TCP
-  * 4060/UDP
+  * 4460/UDP
 
 
