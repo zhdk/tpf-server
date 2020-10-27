@@ -21,21 +21,23 @@ For more information visit:
 
 ### Installation
 
+NOTE: Find detailed instructions in [here](INSTALL.md).
+
 Install Pure Data with your package manager or get binaries
 from:
 
   https://puredata.info/downloads/
 
-You need the following externals to run tpf-client
+You need the following externals to run tpf-server
 
   * iemnet
   * osc
   * slip
 
 You can install externals through the Pd menu:
-'Help' -> 'Find Externals'
+`Help` -> `Find Externals`
 
-tpf-server uses netpd-server as a git submodule, thus make
+**tpf-server** uses **netpd-server** as a git submodule, thus make
 sure to clone the repository like this:
 
 ```
