@@ -58,7 +58,7 @@ protocol version mismatch.
 Once the procol version is agreed upon, the client registers its given name, which
 can be any string configured by the user:
 
-C: /s/tpf/register/name ZHdK
+C: /s/tpf/register/client <room> <nick>
 S: /s/tpf/register/done
 
 If the server responds with:
