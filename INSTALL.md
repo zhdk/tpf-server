@@ -177,9 +177,9 @@ Other Linux Flavors
 ===================
 
 Installation on other Linux flavors might be similar. On other deb-based system, the
-exact same instructions might apply (Ubuntu, Raspbian, Linux Mint, etc.). On rpm-based,
-setting up the systemd services might work the same, but installing software packages
-is one with a different command.
+exact same instructions might apply (Ubuntu, Raspbian, Linux Mint, etc.). On rpm-based
+systems, setting up the systemd services might work the same, but installing software
+packages is done with a different command.
 
 
 macOS / Windows
@@ -193,6 +193,7 @@ install:
   * iemnet
   * osc
   * slip
+
 
 Firewall
 ========
