@@ -131,7 +131,7 @@ After=syslog.target
 
 [Service]
 Type=simple
-ExecStart=python /opt/tpf-server/tpf-udp-proxy.py
+ExecStart=/usr/bin/python3 /opt/tpf-server/tpf-udp-proxy.py
 User=tpf-server
 Group=tpf-server
 
