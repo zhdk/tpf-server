@@ -41,7 +41,7 @@ You can install externals through the Pd menu:
 sure to clone the repository like this:
 
 ```
-git clone --recursive https://gitlab.zhdk.ch/TPF/tpf-server
+git clone --recursive https://github.com/zhdk/tpf-server
 ```
 
 ### Run tpf-server
@@ -69,7 +69,7 @@ between clients.
 
 ### Issues
 
-For any bug, issue or suggestion, please open an issue [here](https://github.com/reduzent/tpf-server/issues).
+For any bug, issue or suggestion, please open an issue [here](https://github.com/zhdk/tpf-server/issues).
 
 ### Authors
 
