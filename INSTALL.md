@@ -22,7 +22,7 @@ Then, we install the **tpf-server** from our Gitlab to /opt/tpf-server:
 
 ```bash
 cd /opt
-git clone --recursive https://gitlab.zhdk.ch/TPF/tpf-server
+git clone --recursive https://github.com/zhdk/tpf-server
 ```
 
 Now, we are already able to run the tpf-server with the following command:
