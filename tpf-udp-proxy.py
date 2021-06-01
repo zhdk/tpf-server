@@ -50,6 +50,11 @@ def addtoken(token, addr):
     else:
         TOKEN_LOOKUP[token] = [addr]
 
+def printlinks(srcaddr):
+    "Print lookups in human-readable form to requesting party"
+    SOCK.sendto(str(LINK_LOOKUP).encode(), srcaddr)
+    SOCK.sendto(str(TOKEN_LOOKUP).encode(), srcaddr)
+
 def clear():
     "Clear token  and link cache"
     LINK_LOOKUP.clear()
@@ -64,6 +69,8 @@ def main():
             if data[0:7] == b'_TOKEN ':
                 token = data.split()
                 addtoken(token[1], srcaddr)
+            elif data == b'_CHECK\n':
+                printlinks(srcaddr)
             else:
                 try:
                     destaddr = LINK_LOOKUP[srcaddr]
