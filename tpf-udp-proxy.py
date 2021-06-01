@@ -8,12 +8,14 @@ clients.
 
 import socket
 import sys
+import time
 
 # init values
 UDP_IP = '0.0.0.0'
 DEFAULT_UDP_PORT = 4460
 LINK_LOOKUP = dict()
 TOKEN_LOOKUP = dict()
+PURGE_TIMEOUT = 10
 
 try:
     UDP_PORT = int(sys.argv[1])
@@ -55,23 +57,23 @@ def clear():
 
 def main():
     "Main loop listening for incoming packets"
-    srcaddr = None
+    prev_ts = time.time()
     try:
         while True:
             data, srcaddr = SOCK.recvfrom(65507)
-
-            # check token
             if data[0:7] == b'_TOKEN ':
                 token = data.split()
                 addtoken(token[1], srcaddr)
-
-            # forward data according to lookup table
             else:
                 try:
                     destaddr = LINK_LOOKUP[srcaddr]
                     SOCK.sendto(data, destaddr)
                 except KeyError:
                     pass
+            current_ts = time.time()
+            if (prev_ts + PURGE_TIMEOUT) < current_ts:
+                clear()
+            prev_ts = current_ts
     except KeyboardInterrupt:
         sys.exit(0)
 
