@@ -5,22 +5,22 @@ import sys
 
 # init values
 UDP_IP = '0.0.0.0'
+DEFAULT_UDP_PORT = 4460
 linklookup = dict()
 tokenlookup = dict()
-DEFAULT_UDP_PORT = 4460
 
 try:
     UDP_PORT = int(sys.argv[1])
 except ValueError:
-    print("Specified port is not a number")
+    sys.stderr.write("[ERROR] Specified port is not a number\n")
     sys.exit(1)
 except IndexError:
     UDP_PORT = DEFAULT_UDP_PORT
 
-# haben wir einen gueltigen Port
-if not isinstance( UDP_PORT, int ) or not  1024 <= UDP_PORT <= 65535:
-    print("WSpecified port (", UDP_PORT, ") is invalid.")
-    print("Valid port range: 1024 - 65535")
+try:
+    assert(1024 <= UDP_PORT <= 65535)
+except AssertionError:
+    sys.stderr.write("[ERROR] Specified port '%s' is out of valid range (1024-65535).\n" % UDP_PORT)
     sys.exit(1)
 
 # create a socket
