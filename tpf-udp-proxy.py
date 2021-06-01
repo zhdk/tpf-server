@@ -67,8 +67,11 @@ def main():
 
             # forward data according to lookup table
             else:
-                destaddr = LINK_LOOKUP[srcaddr]
-                SOCK.sendto(data, destaddr)
+                try:
+                    destaddr = LINK_LOOKUP[srcaddr]
+                    SOCK.sendto(data, destaddr)
+                except KeyError:
+                    pass
     except KeyboardInterrupt:
         sys.exit(0)
 
