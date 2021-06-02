@@ -74,6 +74,10 @@ def main():
     try:
         while True:
             data, srcaddr = SOCK.recvfrom(65507)
+            current_ts = time.time()
+            if (prev_ts + PURGE_TIMEOUT) < current_ts:
+                clear()
+            prev_ts = current_ts
             if data[0:7] == b'_TOKEN ':
                 token = data.split()
                 addtoken(token[1], srcaddr)
@@ -85,10 +89,6 @@ def main():
                     SOCK.sendto(data, destaddr)
                 except KeyError:
                     pass
-            current_ts = time.time()
-            if (prev_ts + PURGE_TIMEOUT) < current_ts:
-                clear()
-            prev_ts = current_ts
     except KeyboardInterrupt:
         sys.exit(0)
 
