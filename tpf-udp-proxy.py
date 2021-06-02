@@ -52,8 +52,16 @@ def addtoken(token, addr):
 
 def printlinks(srcaddr):
     "Print lookups in human-readable form to requesting party"
-    SOCK.sendto(str(LINK_LOOKUP).encode(), srcaddr)
-    SOCK.sendto(str(TOKEN_LOOKUP).encode(), srcaddr)
+    SOCK.sendto(b'-- LINKS ----------------------------\n', srcaddr)
+    for fromaddr in LINK_LOOKUP.keys():
+        toaddr = LINK_LOOKUP[fromaddr]
+        line = f'{fromaddr[0]}:{fromaddr[1]} => {toaddr[0]}:{toaddr[1]}\n'
+        SOCK.sendto(line.encode(), srcaddr)
+    SOCK.sendto(b'-- TOKENS ---------------------------\n', srcaddr)
+    for token in TOKEN_LOOKUP.keys():
+        addr = TOKEN_LOOKUP[token][0]
+        line = f'{token.decode()}: {addr[0]}:{addr[1]}\n'
+        SOCK.sendto(line.encode(), srcaddr)
 
 def clear():
     "Clear token  and link cache"
@@ -61,7 +69,7 @@ def clear():
     TOKEN_LOOKUP.clear()
 
 def main():
-    "Main loop listening for incoming packets"
+    "Main loop listening for incoming packets and relaying them"
     prev_ts = time.time()
     try:
         while True:
