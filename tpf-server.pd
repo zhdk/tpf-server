@@ -1,6 +1,6 @@
-#N canvas 48 112 392 417 10;
+#N canvas 48 109 392 417 10;
 #X declare -path netpd-server/includes;
-#X declare -path osc;
+#X declare -path osc -path include;
 #N canvas 519 214 830 401 tpf.communication 0;
 #X obj 7 8 r SERVER;
 #X obj 7 74 s \$0.from;
@@ -419,7 +419,6 @@ by IP and port.;
 #X restore 13 239 pd reset/all;
 #X obj 13 341 netpd-server/netpd-server;
 #X obj 13 363 declare -path netpd-server/includes;
-#X obj 13 13 declare -path osc;
 #N canvas 0 106 690 442 param.list 0;
 #X obj 12 13 r \$0.from;
 #X obj 12 33 routeOSC /params;
@@ -550,4 +549,6 @@ by IP and port.;
 #X restore 275 285 pd DEBUG;
 #X obj 275 258 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X connect 13 0 12 0;
+#X obj 13 13 declare -path osc -path include;
+#X obj 199 83 tpf-udp-proxy;
+#X connect 12 0 11 0;
