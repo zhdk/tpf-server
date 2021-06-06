@@ -57,15 +57,7 @@ pd -nogui -open tpf-server/tpf-server.pd
 The server opens a listening socket on TCP-port 3025. So make
 sure that this port is open in your firewall configuration.
 The TCP-Port 3025 is only used for client communication and not for
-audio transmission. The audio transmission is using UDP-Port 4460
-and requires a separate Python script to be running:
-
-```
-./tpf-udp-proxy.py
-```
-
-This waits for incoming client connections and relays UDP packets
-between clients.
+audio transmission. The audio transmission is using UDP-Port 4460.
 
 ### Issues
 
