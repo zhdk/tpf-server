@@ -27,9 +27,9 @@ struct token {
 };
 typedef struct token *token_p;
 
-void addlink (link_p link_head, link_p client1, link_p client2);
+void addlink (link_p *link_head, link_p client1, link_p client2);
 
-token_p addtoken (token_p token_head, char *code, link_p client);
+void addtoken (token_p *token_head, link_p *link_head, char *code, link_p client);
 
 bool has_same_address(link_p client1, link_p client2);
 
@@ -68,12 +68,12 @@ int main(int argc,  char*  argv[]) {
     if ( bind(sockfd, (const struct sockaddr *)&servaddr,
             sizeof(servaddr)) < 0 )
     {
-        perror("bind failed");
+        fprintf(stderr, "bind failed\n");
         exit(EXIT_FAILURE);
     }
 
     int len, n;
-    int p = 0;
+    //int p = 0;
     len = sizeof(fromaddr);  //len is value/resuslt
     incoming = (struct link *)malloc (sizeof(struct link));
     incoming->peer = NULL;
@@ -83,44 +83,64 @@ int main(int argc,  char*  argv[]) {
                     MSG_WAITALL, (struct sockaddr *) &fromaddr, &len);
         incoming->addr = fromaddr;
         data[n] = '\0';
+        if (data[n-1] == '\n') data[n-1] = '\0';
         if (strncmp(data, TOKENMARK, 7) == 0) {
             char code[20];
             strncpy (code, data+7, 19);
             code[19] = '\0';
-            token_p new = addtoken (token_head, code, incoming);
+            addtoken (&token_head, &link_head, code, incoming);
             incoming = (struct link *)malloc (sizeof(struct link));
         }
 
         //sendto(sockfd, (const char *)data, n,
         //    MSG_CONFIRM, (const struct sockaddr *) to, len);
+        if (link_head) {
+            link_p p = link_head;
+            do {
+                printf("client  port: %d\n", p->addr.sin_port);
+                printf("my peer port: %d\n", p->peer->addr.sin_port);
+                printf("next in list: %p\n", p->next);
+                printf("port of next: %d\n", p->next->addr.sin_port);
+                printf("peer of next: %d\n", p->next->peer->addr.sin_port);
+                p = p->next;
+            } while (p->next != NULL);
+        }
     }
     return 0;
 }
 
-token_p addtoken (token_p token_head, char *code, link_p client)
+void addtoken (token_p *token_head, link_p *link_head, char *code, link_p client)
 {
     token_p p, new;
-    p = (struct token *)malloc (sizeof(struct token));
     new = (struct token *)malloc (sizeof(struct token));
+    if (!new) {
+        fprintf (stderr, "malloc for token failed.\n");
+        exit(EXIT_FAILURE);
+    }
     strcpy(new->code, code);
     new->client = client;
     new->next = NULL;
 
-    if (!token_head) {
-        token_head = new;
+    if (!*token_head) {
+        *token_head = new;
     } else {
-        p = token_head;
-        bool found = false;
+        p = *token_head;
+        // append to linked list
         while (p->next != NULL) {
-            if (strcmp(p->code, new->code) == 0) {
-                addlink(link_head, p->client, new->client);
-                found = true;
-                break;
             p = p->next;
         }
-        if (!found) {
-            p->next = new;
-        }
+        p->next = new;
+        // find match
+        p = *token_head;
+        do {
+            if (strcmp(p->code, new->code) == 0) {
+                printf("two clients share token: %s\n", p->code);
+                addlink(link_head, p->client, new->client);
+                break;
+            }
+            p = p->next;
+        } while (p->next != NULL);
+
     }
 }
 
@@ -133,14 +153,16 @@ bool has_same_address(link_p client1, link_p client2) {
     }
 }
 
-void addlink (link_p link_head, link_p client1, link_p client2) {
+void addlink (link_p *link_head, link_p client1, link_p client2) {
+    printf("a pair of clients has been added: %d, %d\n", client1->addr.sin_port, client2->addr.sin_port);
     client1->peer = client2;
     client2->peer = client1;
-    if (!link_head) {
-        link_head = client1;
-        link_head->next = client;
+    if (!*link_head) {
+        *link_head = client1;
+        (*link_head)->next = client2;
     } else {
-        p = link_head;
+        link_p p;
+        p = *link_head;
         while (p->next != NULL) {
             p = p->next;
         }
