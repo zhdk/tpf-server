@@ -27,11 +27,11 @@ struct token {
 };
 typedef struct token *token_p;
 
-void addlink (link_p *link_head, link_p client1, link_p client2);
+void add_link (link_p *link_head, link_p client1, link_p client2);
 
-void addtoken (token_p *token_head, link_p *link_head, char *code, link_p client);
+void add_token (token_p *token_head, link_p *link_head, char *code, link_p client);
 
-void freetoken (token_p *token_head, token_p token);
+void free_token (token_p *token_head, token_p token);
 
 bool has_same_address(link_p client1, link_p client2);
 
@@ -87,7 +87,7 @@ int main(int argc,  char*  argv[]) {
             char code[20];
             strncpy (code, data+7, 19);
             code[19] = '\0';
-            addtoken (&token_head, &link_head, code, incoming);
+            add_token (&token_head, &link_head, code, incoming);
             incoming = (struct link *)malloc (sizeof(struct link));
             continue;
         }
@@ -107,7 +107,7 @@ int main(int argc,  char*  argv[]) {
     return 0;
 }
 
-void addtoken (token_p *token_head, link_p *link_head, char *code, link_p client)
+void add_token (token_p *token_head, link_p *link_head, char *code, link_p client)
 {
     token_p p, new;
     // Find a match in token linked list
@@ -115,8 +115,8 @@ void addtoken (token_p *token_head, link_p *link_head, char *code, link_p client
         p = *token_head;
         do {
             if (strcmp(p->code, code) == 0) {
-                addlink(link_head, p->client, client);
-                freetoken(token_head, p);
+                add_link(link_head, p->client, client);
+                free_token(token_head, p);
                 return;
             }
             p = p->next;
@@ -144,7 +144,7 @@ void addtoken (token_p *token_head, link_p *link_head, char *code, link_p client
     }
 }
 
-void freetoken (token_p *token_head, token_p token) {
+void free_token (token_p *token_head, token_p token) {
     token_p p = *token_head;
     if (p == token) {
         *token_head = p->next;
@@ -170,7 +170,7 @@ bool has_same_address(link_p client1, link_p client2) {
     }
 }
 
-void addlink (link_p *link_head, link_p client1, link_p client2) {
+void add_link (link_p *link_head, link_p client1, link_p client2) {
     client1->peer = client2;
     client2->peer = client1;
     if (!*link_head) {
