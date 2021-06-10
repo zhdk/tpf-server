@@ -36,7 +36,6 @@ bool has_same_address(link_p client1, link_p client2);
 link_p link_head = NULL;
 token_p token_head = NULL;
 
-// Driver code
 int main(int argc,  char*  argv[]) {
     int port = DEFAULTPORT;
     int sockfd;
@@ -44,7 +43,7 @@ int main(int argc,  char*  argv[]) {
     char addrstr[INET_ADDRSTRLEN];
     struct sockaddr_in servaddr;
     struct sockaddr_in fromaddr;
-    struct link *incoming;
+    link_p incoming;
 
     if (argc > 1) port = atoi (argv[1]);
     if (port < 1024 || port >= 65536) {
@@ -52,7 +51,6 @@ int main(int argc,  char*  argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    // Creating socket file descriptor
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
         fprintf (stderr, "Socket creation failed\n");
         exit(EXIT_FAILURE);
@@ -73,7 +71,6 @@ int main(int argc,  char*  argv[]) {
     }
 
     int len, n;
-    //int p = 0;
     len = sizeof(fromaddr);  //len is value/resuslt
     incoming = (struct link *)malloc (sizeof(struct link));
     incoming->peer = NULL;
@@ -83,26 +80,30 @@ int main(int argc,  char*  argv[]) {
                     MSG_WAITALL, (struct sockaddr *) &fromaddr, &len);
         incoming->addr = fromaddr;
         data[n] = '\0';
-        if (data[n-1] == '\n') data[n-1] = '\0';
         if (strncmp(data, TOKENMARK, 7) == 0) {
+            if (data[n-1] == '\n') data[n-1] = '\0';
             char code[20];
             strncpy (code, data+7, 19);
             code[19] = '\0';
             addtoken (&token_head, &link_head, code, incoming);
             incoming = (struct link *)malloc (sizeof(struct link));
+            continue;
         }
 
-        //sendto(sockfd, (const char *)data, n,
-        //    MSG_CONFIRM, (const struct sockaddr *) to, len);
         if (link_head) {
             link_p p = link_head;
+            if (has_same_address(p, incoming)) {
+                sendto(sockfd, (const char *)data, n,
+                    MSG_CONFIRM, (const struct sockaddr *) &p->peer->addr, len);
+                continue;
+            }
             do {
-                printf("client  port: %d\n", p->addr.sin_port);
-                printf("my peer port: %d\n", p->peer->addr.sin_port);
-                printf("next in list: %p\n", p->next);
-                printf("port of next: %d\n", p->next->addr.sin_port);
-                printf("peer of next: %d\n", p->next->peer->addr.sin_port);
                 p = p->next;
+                if (has_same_address(p, incoming)) {
+                    sendto(sockfd, (const char *)data, n,
+                        MSG_CONFIRM, (const struct sockaddr *) &p->peer->addr, len);
+                    break;
+                }
             } while (p->next != NULL);
         }
     }
@@ -134,7 +135,6 @@ void addtoken (token_p *token_head, link_p *link_head, char *code, link_p client
         p = *token_head;
         do {
             if (strcmp(p->code, new->code) == 0) {
-                printf("two clients share token: %s\n", p->code);
                 addlink(link_head, p->client, new->client);
                 break;
             }
@@ -154,7 +154,6 @@ bool has_same_address(link_p client1, link_p client2) {
 }
 
 void addlink (link_p *link_head, link_p client1, link_p client2) {
-    printf("a pair of clients has been added: %d, %d\n", client1->addr.sin_port, client2->addr.sin_port);
     client1->peer = client2;
     client2->peer = client1;
     if (!*link_head) {
