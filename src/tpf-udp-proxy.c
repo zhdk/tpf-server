@@ -31,6 +31,8 @@ void addlink (link_p *link_head, link_p client1, link_p client2);
 
 void addtoken (token_p *token_head, link_p *link_head, char *code, link_p client);
 
+void freetoken (token_p *token_head, token_p token);
+
 bool has_same_address(link_p client1, link_p client2);
 
 link_p link_head = NULL;
@@ -92,19 +94,14 @@ int main(int argc,  char*  argv[]) {
 
         if (link_head) {
             link_p p = link_head;
-            if (has_same_address(p, incoming)) {
-                sendto(sockfd, (const char *)data, n,
-                    MSG_CONFIRM, (const struct sockaddr *) &p->peer->addr, len);
-                continue;
-            }
             do {
-                p = p->next;
                 if (has_same_address(p, incoming)) {
                     sendto(sockfd, (const char *)data, n,
                         MSG_CONFIRM, (const struct sockaddr *) &p->peer->addr, len);
                     break;
                 }
-            } while (p->next != NULL);
+                p = p->next;
+            } while (p != NULL);
         }
     }
     return 0;
@@ -113,6 +110,20 @@ int main(int argc,  char*  argv[]) {
 void addtoken (token_p *token_head, link_p *link_head, char *code, link_p client)
 {
     token_p p, new;
+    // Find a match in token linked list
+    if (*token_head) {
+        p = *token_head;
+        do {
+            if (strcmp(p->code, code) == 0) {
+                addlink(link_head, p->client, client);
+                //freetoken(token_head, p);
+                return;
+            }
+            p = p->next;
+        } while (p != NULL);
+    }
+    // we found no match, so we create a token and append
+    // it to the linked list
     new = (struct token *)malloc (sizeof(struct token));
     if (!new) {
         fprintf (stderr, "malloc for token failed.\n");
@@ -121,26 +132,31 @@ void addtoken (token_p *token_head, link_p *link_head, char *code, link_p client
     strcpy(new->code, code);
     new->client = client;
     new->next = NULL;
-
-    if (!*token_head) {
-        *token_head = new;
-    } else {
+    if (*token_head) {
         p = *token_head;
         // append to linked list
         while (p->next != NULL) {
             p = p->next;
         }
         p->next = new;
-        // find match
-        p = *token_head;
+    } else {
+        *token_head = new;
+    }
+}
+
+void freetoken (token_p *token_head, token_p token) {
+    token_p p = *token_head;
+    if (p == token) {
+        *token_head = p->next;
+        free(token);
+    } else {
         do {
-            if (strcmp(p->code, new->code) == 0) {
-                addlink(link_head, p->client, new->client);
+            if (p->next == token) {
+                p->next = token->next;
+                free(token);
                 break;
             }
-            p = p->next;
-        } while (p->next != NULL);
-
+        } while (p != NULL);
     }
 }
 
