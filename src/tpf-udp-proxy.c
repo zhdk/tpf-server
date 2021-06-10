@@ -116,7 +116,7 @@ void addtoken (token_p *token_head, link_p *link_head, char *code, link_p client
         do {
             if (strcmp(p->code, code) == 0) {
                 addlink(link_head, p->client, client);
-                //freetoken(token_head, p);
+                freetoken(token_head, p);
                 return;
             }
             p = p->next;
@@ -156,6 +156,7 @@ void freetoken (token_p *token_head, token_p token) {
                 free(token);
                 break;
             }
+            p = p->next;
         } while (p != NULL);
     }
 }
