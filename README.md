@@ -7,10 +7,11 @@ NOTE: tpf-server is still in an experimental state and does not guarantuee
 ### About
 
 **[tpf-server](https://github.com/zhdk/tpf-server)** is used to connect instances
-of tpf-clients. It is supposed to run on server with a public IP address.
+of tpf-clients. It is supposed to run a on server with a public IP address.
 
 **[tpf-client](https://github.com/zhdk/tpf-client)** is a low-latency audio
-transmission software based on the jacktrip protocol and built in Pure Data.
+transmission software based on the [AoO](https://git.iem.at/cm/aoo)  (Audio-over-OSC)
+protocol and built in Pure Data.
 
 
 For more information visit:
@@ -30,19 +31,13 @@ from:
 
 You need the following externals to run tpf-server
 
-  * iemnet
-  * osc
-  * slip
+  * aoo
 
 You can install externals through the Pd menu:
 `Help` -> `Find Externals`
 
-**tpf-server** uses **netpd-server** as a git submodule, thus make
-sure to clone the repository like this:
-
-```
-git clone --recursive https://github.com/zhdk/tpf-server
-```
+NOTE: There is no official release of AoO yet. A release should
+be available by the end of the year 2021.
 
 ### Run tpf-server
 
@@ -54,18 +49,9 @@ probably want to run it in nogui mode:
 pd -nogui -open tpf-server/tpf-server.pd
 ```
 
-The server opens a listening socket on TCP-port 3025. So make
-sure that this port is open in your firewall configuration.
-The TCP-Port 3025 is only used for client communication and not for
-audio transmission. The audio transmission is using UDP-Port 4460
-and requires a separate Python script to be running:
+The server opens a listening socket on port 12043 (both TCP and UDP).
+Please make sure that this port is open in your firewall configuration.
 
-```
-./tpf-udp-proxy.py
-```
-
-This waits for incoming client connections and relays UDP packets
-between clients.
 
 ### Issues
 
