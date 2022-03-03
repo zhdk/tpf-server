@@ -1,0 +1,66 @@
+#!/bin/bash
+PD="/Applications/Pd-0.52-1-really.app/Contents/Resources/bin/pd"
+TPFSERVER="/Users/user/pd-src/tpf-server/tpf-server.pd"
+pidfile_pd="$TMPDIR/tpf-server-aoo.pid"
+
+function pd_start {
+  if check_running $pidfile_pd
+  then
+    echo "tpf-server is already running"
+    return 0
+  else
+    $PD -nogui -stderr -open $TPFSERVER &
+    echo $! > $pidfile_pd
+    return 0
+  fi
+}
+
+function pd_stop {
+  if check_running $pidfile_pd
+  then
+    kill $(cat $pidfile_pd)
+    rm $pidfile_pd
+    return 0
+  else
+    echo "tpf-server is already stopped"
+    return 0
+  fi
+}
+
+function check_running {
+  # ARG1: pidfile
+  if [ -f $1 ]
+  then
+    if kill -0 $(cat $1) > /dev/null
+    then
+      return 0
+    else
+      echo "Stale pidfile found: $1"
+      rm $1
+      return 1
+    fi
+  else
+    return 1
+  fi
+}
+
+# only evaluate first argument if script is not sourced
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
+then
+  case $1 in
+    start)
+      pd_start
+      exit 0
+      ;;
+    stop)
+      pd_stop
+      exit 0
+      ;;
+    *)
+      echo "operation '$1' not supported. Use '$0 start' or '$0 stop'"
+      exit 1
+      ;;
+  esac
+fi
+
+
