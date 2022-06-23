@@ -1,8 +1,12 @@
 #N canvas 1242 431 450 300 10;
 #X declare -lib aoo;
 #X obj 16 20 declare -lib aoo;
-#X obj 60 70 aoo_server 12043;
-#X obj 153 112 print AOO_EVENTS;
-#X obj 60 167 print AOO_CLIENT_COUNT;
+#X obj 60 110 aoo_server 12043;
+#X obj 153 182 print AOO_EVENTS;
+#X obj 60 207 print AOO_CLIENT_COUNT;
+#X obj 60 57 loadbang;
+#X msg 60 80 relay 1;
 #X connect 1 0 3 0;
 #X connect 1 1 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 1 0;
