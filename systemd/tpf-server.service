@@ -1,0 +1,12 @@
+[Unit]
+Description=tpf-server
+After=syslog.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/aooserver -r -p 12043 -l 3
+User=tpf-server
+Group=tpf-server
+
+[Install]
+WantedBy=multi-user.target
