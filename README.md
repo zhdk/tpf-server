@@ -98,8 +98,8 @@ as tpf-server.service systemd unit:
 
       ```
       sudo systemctl daemon-reload
-      sudo systemd enable tpf-server.service
-      sudo systemd start tpf-server.service
+      sudo systemctl enable tpf-server.service
+      sudo systemctl start tpf-server.service
       ```
 
   4. Check if tpf-server is running correctly:
