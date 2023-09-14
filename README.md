@@ -69,10 +69,10 @@ and derivatices):
       make -j
       ```
 
-  5. Install everything:
+  5. Install everything (as root for system-wide installation):
 
       ```
-      make install
+      sudo make install
       ```
 
 #### Configure aooserver as system daemon
@@ -85,7 +85,7 @@ as tpf-server.service systemd unit:
   1. Add a system-user `tpf-server` which the daemon is going to run as:
 
       ```
-      useradd -r -s /usr/sbin/nologin tpf-server
+      sudo useradd -r -s /usr/sbin/nologin tpf-server
       ```
 
   2. Install the service unit file:
@@ -97,15 +97,15 @@ as tpf-server.service systemd unit:
   3. Enable and start the tpf-server.service:
 
       ```
-      systemctl daemon-reload
-      systemd enable tpf-server.service
-      systemd start tpf-server.service
+      sudo systemctl daemon-reload
+      sudo systemd enable tpf-server.service
+      sudo systemd start tpf-server.service
       ```
 
   4. Check if tpf-server is running correctly:
 
       ```
-      journalctl -f -u tpf-server.service
+      sudo journalctl -f -u tpf-server.service
       ```
 
       The output of the above command should look similar to this:
@@ -117,8 +117,8 @@ as tpf-server.service systemd unit:
 
 Now you can manage tpf-server with the usual systemd commands:
 
-  * Start: `systemctl start tpf-server.service`
-  * Stop: `systemctl stop tpf-server.service`
+  * Start: `sudo systemctl start tpf-server.service`
+  * Stop: `sudo systemctl stop tpf-server.service`
 
 ##### Change port, enable/disable relaying
 If you want your tpf-server to listen on a different port, apply your settings to the
@@ -128,7 +128,7 @@ systemd unit in `/etc/systemd/system/tpf-server.service` and repeat the steps in
 Of course, you can invoke **aooserver** directly from the command line, which might be
 convenient for testing different parameters. **aooserver** supports the following options:
 
-  - `-p`, `--port`: port number (default = 7078)
+  - `-p`, `--port=PORT`: port number (default = 7078)
   - `-r`, `--relay`: enable server relay
   - `-l`, `--log-level=LEVEL`:  set log level
 
