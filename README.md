@@ -35,11 +35,13 @@ for detailed info, but basically those steps should get you a working build (wor
 and derivatices):
 
   1. Install everything we need for building:
+
      ```
      sudo apt install git build-essential cmake
      ```
 
   2. Clone the aoo git repository:
+
      ```
      git clone https://git.iem.at/cm/aoo.git
      cd aoo
@@ -48,6 +50,7 @@ and derivatices):
      ```
 
   3. Configure the build (we don't need the Pure Data externals nor the SuperCollider extensions):
+
     ```
     cmake .. \
       -DAOO_BUILD_PD_EXTERNAL=OFF \
@@ -59,32 +62,38 @@ and derivatices):
     ```
 
   4. Build the aoo binaries:
+
     ```
     make -j
     ```
 
   5. Install everything:
+
     ```
     make install
     ```
 
 #### Configure aooserver as system daemon
+
 If you want to run aooserver as system daemon that automatically
 starts when the server boots and that can be managed like any
 other systemd service, then follow these steps to configure aooserver
 as tpf-server.service systemd unit:
 
   1. Add a system-user `tpf-server` which the daemon is going to run as:
+
     ```
     useradd -r -s /usr/sbin/nologin tpf-server
     ```
 
   2. Install the service unit file:
+
     ```
     sudo cp systemd/tpf-server.service /etc/systemd/system/
     ```
 
   3. Enable and start the tpf-server.service:
+
     ```
     systemctl daemon-reload
     systemd enable tpf-server.service
@@ -92,11 +101,13 @@ as tpf-server.service systemd unit:
     ```
 
   4. Check if tpf-server is running correctly:
+
     ```
     journalctl -f -u tpf-server.service
     ```
 
     The output of the above command should look similar to this:
+
     ```
     Sep 14 14:31:31 tpf-server systemd[1]: Started tpf-server.service - tpf-server.
     Sep 14 14:31:31 tpf-server aooserver[2042]: Listening on port 12043
@@ -112,8 +123,8 @@ If you want your tpf-server to listen on a different port, apply your settings t
 systemd unit in `/etc/systemd/system/tpf-server.service` and repeat the steps in 3.
 
 ### Server options
-Of course, you can invoke `aooserver` directly from the command line, which might be
-convenient for testing different parameters. `aooserver` supports the following options:
+Of course, you can invoke **aooserver** directly from the command line, which might be
+convenient for testing different parameters. **aooserver** supports the following options:
 
   - `-p`, `--port`: port number (default = 7078)
   - `-r`, `--relay`: enable server relay
