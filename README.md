@@ -51,27 +51,27 @@ and derivatices):
 
   3. Configure the build (we don't need the Pure Data externals nor the SuperCollider extensions):
 
-    ```
-    cmake .. \
-      -DAOO_BUILD_PD_EXTERNAL=OFF \
-      -DAOO_BUILD_SC_EXTENSION=OFF \
-      -DAOO_LOG_LEVEL=Warning \
-      -DCMAKE_INSTALL_PREFIX=/usr/local \
-      -DAOO_SYSTEM_OPUS=off \
-      -DOPUS_BUILD_SHARED_LIBRARY=off
-    ```
+     ```
+     cmake .. \
+       -DAOO_BUILD_PD_EXTERNAL=OFF \
+       -DAOO_BUILD_SC_EXTENSION=OFF \
+       -DAOO_LOG_LEVEL=Warning \
+       -DCMAKE_INSTALL_PREFIX=/usr/local \
+       -DAOO_SYSTEM_OPUS=off \
+       -DOPUS_BUILD_SHARED_LIBRARY=off
+     ```
 
   4. Build the aoo binaries:
 
-    ```
-    make -j
-    ```
+     ```
+     make -j
+     ```
 
   5. Install everything:
 
-    ```
-    make install
-    ```
+     ```
+     make install
+     ```
 
 #### Configure aooserver as system daemon
 
@@ -82,36 +82,36 @@ as tpf-server.service systemd unit:
 
   1. Add a system-user `tpf-server` which the daemon is going to run as:
 
-    ```
-    useradd -r -s /usr/sbin/nologin tpf-server
-    ```
+     ```
+     useradd -r -s /usr/sbin/nologin tpf-server
+     ```
 
   2. Install the service unit file:
 
-    ```
-    sudo cp systemd/tpf-server.service /etc/systemd/system/
-    ```
+     ```
+     sudo cp systemd/tpf-server.service /etc/systemd/system/
+     ```
 
   3. Enable and start the tpf-server.service:
 
-    ```
-    systemctl daemon-reload
-    systemd enable tpf-server.service
-    systemd start tpf-server.service
-    ```
+     ```
+     systemctl daemon-reload
+     systemd enable tpf-server.service
+     systemd start tpf-server.service
+     ```
 
   4. Check if tpf-server is running correctly:
 
-    ```
-    journalctl -f -u tpf-server.service
-    ```
+     ```
+     journalctl -f -u tpf-server.service
+     ```
 
     The output of the above command should look similar to this:
 
-    ```
-    Sep 14 14:31:31 tpf-server systemd[1]: Started tpf-server.service - tpf-server.
-    Sep 14 14:31:31 tpf-server aooserver[2042]: Listening on port 12043
-    ```
+     ```
+     Sep 14 14:31:31 tpf-server systemd[1]: Started tpf-server.service - tpf-server.
+     Sep 14 14:31:31 tpf-server aooserver[2042]: Listening on port 12043
+     ```
 
 Now you can manage tpf-server with the usual systemd commands:
 
