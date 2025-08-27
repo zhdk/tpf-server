@@ -4,7 +4,7 @@ After=syslog.target
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/aooserver -r -p 12043 -l 3
+ExecStart=/usr/local/bin/aooserver -r -p 27001 -l 3
 User=tpf-server
 Group=tpf-server
 
