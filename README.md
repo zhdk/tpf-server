@@ -26,7 +26,7 @@ used for exploring tpf-client:
 
 ### Installation
 
-You can get AoO builds containing the `aooserver` binary from [here](https://git.iem.at/aoo/aoo/-/releases)
+You can get AoO builds containing the `aooserver` binary from [here](https://git.iem.at/aoo/aoo/-/releases).
 Select the build matching your platform from the 'Binaries' section.
 
 
