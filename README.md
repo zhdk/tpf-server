@@ -1,14 +1,11 @@
 ## tpf-server
 
-NOTE: tpf-server is still in an experimental state and does not guarantuee
-      backwards compatibility yet.
-
-
 ### About
 
 **[tpf-server](https://github.com/zhdk/tpf-server)** connects instances of tpf-client.
-Nowadays, tpf-server is simply **aooserver** from [AoO](https://git.iem.at/cm/aoo)
-software.
+
+Historically, tpf-server was running as Pd patch. Nowadays, tpf-server is simply **aooserver**
+from the [AoO](https://git.iem.at/aoo/aoo) software.
 
 **[tpf-client](https://github.com/zhdk/tpf-client)** is a low-latency audio
 transmission software based on the [AoO](https://git.iem.at/cm/aoo)  (Audio-over-OSC)
@@ -19,61 +16,20 @@ For more information visit:
 
   * https://github.com/zhdk/tpf-server
   * https://github.com/zhdk/tpf-client
+  * https://git.iem.at/aoo/aoo
 
 The University of the Arts Zurich runs a publicly accessible tpf-server which may be
 used for exploring tpf-client:
 
   * Hostname: **tpf-server.zhdk.ch**
-  * Port:  **12043**
+  * Port:  **27001**
 
 ### Installation
 
-#### Build aoo
-If you want to run your own instance of the tpf-server, you need to build [AoO](https://git.iem.at/cm/aoo).
-As of the time of this writing, there are no binaries available yet. Refer to the AoO documentation
-for detailed info, but basically those steps should get you a working build (works for Debian
-and derivatices):
+You can get AoO builds containing the `aooserver` binary from [here](https://git.iem.at/aoo/aoo/-/releases)
+Select the build matching your platform from the 'Binaries' section.
 
-  1. Install everything we need for building:
 
-      ```
-      sudo apt install git build-essential cmake
-      ```
-
-  2. Clone the aoo git repository:
-
-      ```
-      git clone https://git.iem.at/cm/aoo.git
-      cd aoo
-      git checkout develop
-      git submodule update --init
-      ```
-
-  3. Configure the build (we don't need the Pure Data externals nor the SuperCollider extensions):
-
-      ```
-      mkdir build
-      cd build
-      cmake .. \
-        -DAOO_BUILD_PD_EXTERNAL=OFF \
-        -DAOO_BUILD_SC_EXTENSION=OFF \
-        -DAOO_LOG_LEVEL=Warning \
-        -DCMAKE_INSTALL_PREFIX=/usr/local \
-        -DAOO_SYSTEM_OPUS=off \
-        -DOPUS_BUILD_SHARED_LIBRARY=off
-      ```
-
-  4. Build the aoo binaries:
-
-      ```
-      make -j
-      ```
-
-  5. Install everything (as root for system-wide installation):
-
-      ```
-      sudo make install
-      ```
 
 #### Configure aooserver as system daemon
 
@@ -112,7 +68,7 @@ as tpf-server.service systemd unit:
 
       ```
       Sep 14 14:31:31 tpf-server systemd[1]: Started tpf-server.service - tpf-server.
-      Sep 14 14:31:31 tpf-server aooserver[2042]: Listening on port 12043
+      Sep 14 14:31:31 tpf-server aooserver[2042]: Listening on port 27001
       ```
 
 Now you can manage tpf-server with the usual systemd commands:
