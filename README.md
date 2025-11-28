@@ -26,9 +26,14 @@ used for exploring tpf-client:
 
 ### Installation
 
-You can get AoO builds containing the `aooserver` binary from [here](https://git.iem.at/aoo/aoo/-/releases).
-Select the build matching your platform from the 'Binaries' section.
+#### Get and install aooserver
 
+You can get AoO builds containing the `aooserver` binary from [here](https://git.iem.at/aoo/aoo/-/releases).
+Select the build matching your platform from the **Binaries** section. Unpack the archive and place the `aooserver`
+binary to `/usr/local/bin`:
+
+  1. `unzip aoo_v2.0*package.zip`
+  2. `sudo cp aoo_v2.0*package/aoo/bin/aooserver /usr/local/bin/aooserver`
 
 
 #### Configure aooserver as system daemon
