@@ -1,0 +1,4 @@
+site_name: tpf-server - A low-latency multichannel audio transmission system (server part)
+site_url: https://tpf-server.github.io
+theme:
+  name: material
